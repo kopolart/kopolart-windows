@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Plain net11.0: IAssetService (GDI+ types) moved to the UI layer, so this
+         project no longer needs a Windows TFM or System.Drawing.Common. -->
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Kopolart.Windows.Application</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <!-- Embedded PDBs keep file/line info in crash logs without extra files. -->
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kopolart.Windows.Domain\Kopolart.Windows.Domain.csproj" />
+  </ItemGroup>
+</Project>

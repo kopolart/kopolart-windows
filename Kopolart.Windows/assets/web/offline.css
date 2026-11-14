@@ -1,0 +1,124 @@
+/*
+ * Offline page styles.
+ * Light palette mirrors UIConstants.cs (BrandBackground #e2cdb4 and CardBackground #fffdf9);
+ * dark palette mirrors UIConstants.cs DarkMode (BrandBackground #403e3b and CardBackground #2c2a28).
+ */
+
+:root {
+    --theme-color: #e2cdb4;
+    --bg-color: #e2cdb4;
+    --text-color: #555;
+    --heading-color: #333;
+    --subtext-color: #777;
+    --button-text-color: #4a3b2a;
+    --shadow-light: rgba(226, 205, 180, 0.4);
+    --shadow-dark: rgba(226, 205, 180, 0.6);
+    --container-bg: #fffdf9;
+    --font-stack: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body.dark {
+    --theme-color: #a3795f;
+    --bg-color: #403e3b;
+    --text-color: #c0b8b0;
+    --heading-color: #e8e0d8;
+    --subtext-color: #9a9088;
+    --button-text-color: #f0e8e0;
+    --shadow-light: rgba(0, 0, 0, 0.4);
+    --shadow-dark: rgba(0, 0, 0, 0.6);
+    --container-bg: #2c2a28;
+}
+
+body.fa {
+    --font-stack: Vazirmatn, Tahoma, 'Segoe UI', sans-serif;
+}
+
+body {
+    font-family: var(--font-stack);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    text-align: center;
+    user-select: none;
+}
+
+.container {
+    padding: 40px;
+    border-radius: 20px;
+    background: var(--container-bg);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    max-width: 400px;
+    width: 90%;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    color: var(--theme-color);
+}
+
+h1 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    color: var(--heading-color);
+}
+
+p {
+    margin: 0 0 30px 0;
+    line-height: 1.5;
+    color: var(--subtext-color);
+}
+
+button {
+    background-color: var(--theme-color);
+    color: var(--button-text-color);
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px var(--shadow-light);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px var(--shadow-dark);
+    filter: brightness(0.95);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.countdown {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--subtext-color);
+    cursor: pointer;
+    transition: opacity 0.2s;
+    user-select: none;
+}
+
+.countdown:hover {
+    opacity: 0.8;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

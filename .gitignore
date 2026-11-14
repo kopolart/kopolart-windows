@@ -1,0 +1,34 @@
+# Signing secrets and certificates - must never be committed
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.snk
+*.local.props
+*.secrets.json
+appsettings.*.local.json
+
+# Build output
+[Bb]in/
+[Oo]bj/
+publish/
+*.binlog
+
+# IDE and user files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userprefs
+*.DotSettings.user
+
+# Logs and OS junk
+*.log
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Licensed commercial font family (Abar, fontiran.com) - local builds only.
+# The public repository ships the OFL Estedad family instead.
+Kopolart.Windows/assets/font/Abar*

@@ -1,0 +1,28 @@
+# NOTICE
+
+## Brand, content and trademark
+
+The MIT license in [LICENSE](LICENSE) applies to the **source code** in this repository only.
+
+It does **not** grant any right to the KopolArt name, wordmark, logo, icon, colour identity,
+screenshots, artwork, photography, written content, or the `kopolart.ir` service, all of which
+remain the property of Ali Yousefi (KopolArt).
+
+If you fork or reuse this code:
+
+- use a different application name, assembly name and visual identity;
+- do not use the KopolArt logo or artwork, and do not reproduce the site's content;
+- do not state or imply that your build is official, endorsed by, or affiliated with KopolArt;
+- point your build at your own service, not at `kopolart.ir`.
+
+## Third-party assets
+
+| Asset | License | Notes |
+| --- | --- | --- |
+| **Estedad** font family (`assets/font/Estedad-*.ttf`) | SIL Open Font License 1.1 | Copyright 2026 The Estedad Project Authors — <https://github.com/aminabedi68/Estedad>; license text: <https://openfontlicense.org> |
+| `kopolart-fa` icon font | CC BY 4.0 (glyphs) | Generated with IcoMoon from Font Awesome Free glyphs. Attribution: Font Awesome Free, <https://creativecommons.org/licenses/by/4.0/> |
+| Microsoft.Web.WebView2 / WebView2 Runtime | Microsoft license terms | <https://learn.microsoft.com/microsoft-edge/webview2/> |
+| .NET, Windows Forms | MIT | <https://github.com/dotnet/runtime> |
+
+The commercial **Abar** font family used in the author's private build is intentionally **not**
+part of this repository and is not redistributed here.

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Plain net11.0: the Domain layer has no Windows dependencies. -->
+    <TargetFramework>net11.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Kopolart.Windows.Domain</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <!-- Embedded PDBs keep file/line info in crash logs without extra files. -->
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+</Project>

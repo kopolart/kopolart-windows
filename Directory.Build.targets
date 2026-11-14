@@ -1,0 +1,6 @@
+<Project>
+	<!-- Remove the WPF reference added by Microsoft.Web.WebView2 NuGet package to solve the yellow warning icon in Visual Studio Solution Explorer -->
+	<ItemGroup Condition="'$(UseWindowsForms)' == 'true' and '$(UseWPF)' != 'true'">
+		<Reference Remove="@(Reference->WithMetadataValue('Filename', 'Microsoft.Web.WebView2.Wpf'))" />
+	</ItemGroup>
+</Project>

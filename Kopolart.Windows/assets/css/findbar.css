@@ -1,0 +1,111 @@
+/*
+ * Find-in-page bar styles, injected by findbar.js.
+ * Colors match the previous inline implementation exactly.
+ */
+
+#kopolart-find-bar {
+    position: fixed;
+    top: 14px;
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    font-size: 13px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    background: #ffffff;
+    color: #1e1e24;
+    border: 1px solid #dcdcdc;
+}
+
+#kopolart-find-bar.kp-ltr {
+    left: 20px;
+    right: auto;
+    direction: ltr;
+}
+
+#kopolart-find-bar.kp-rtl {
+    right: 20px;
+    left: auto;
+    direction: rtl;
+}
+
+#kopolart-find-bar.kp-dark {
+    background: #1e1e24;
+    color: #f0f0f0;
+    border: 1px solid #3b3b4f;
+}
+
+#kopolart-find-input {
+    outline: none;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    width: 180px;
+    background: #fff;
+    color: #000;
+}
+
+#kopolart-find-bar.kp-dark #kopolart-find-input {
+    border-color: #444;
+    background: #2b2b36;
+    color: #fff;
+}
+
+#kopolart-find-count {
+    font-size: 11px;
+    opacity: 0.8;
+    min-width: 45px;
+    text-align: center;
+}
+
+#kopolart-find-next,
+#kopolart-find-prev {
+    cursor: pointer;
+    border: none;
+    background: #eef0f5;
+    color: inherit;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+#kopolart-find-bar.kp-dark #kopolart-find-next,
+#kopolart-find-bar.kp-dark #kopolart-find-prev {
+    background: #3b3b4f;
+}
+
+#kopolart-find-close {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#kopolart-find-bar.kp-ltr #kopolart-find-close {
+    margin-left: 4px;
+}
+
+#kopolart-find-bar.kp-rtl #kopolart-find-close {
+    margin-right: 4px;
+}
+
+mark.kp-find-match {
+    background-color: #ffeb3b !important;
+    color: #000 !important;
+    border-radius: 2px;
+    padding: 0 1px;
+}
+
+mark.kp-find-active {
+    background-color: #ff9800 !important;
+    color: #fff !important;
+    font-weight: bold;
+    outline: 2px solid #e65100;
+}
