@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 <img src="docs/logo.png" width="110" alt="KopolArt" />
 
@@ -48,35 +48,71 @@ A desktop client for [kopolart.ir](https://kopolart.ir) — a Persian platform f
 
 ## Features
 
-### Browsing
-- Native window with back / forward / home / reload and the current URL
-- **Find bar** for searching inside the page
-- Dark and light themes that follow the app and the site
-- Persian-first, right-to-left interface
+KopolArt for Windows is a real desktop client: native windows, native dialogs and desktop behaviour wrapped around the site.
+
+| Area | Highlights |
+| --- | --- |
+| **Dashboard** | Native home, action cards, live metrics and a daily usage chart |
+| **Browsing** | WebView2 engine, find bar, bookmarks, history, downloads |
+| **Layouts** | Desktop, tablet and mobile layouts for the same content |
+| **Wallpapers** | Multi-monitor preview, placement modes, apply to the desktop |
+| **Desktop** | Tray icon, notifications, autostart, shortcuts, single instance |
+| **Data** | Backup export/import, atomic settings, cache controls, activity logs |
 
 ### Dashboard
-- Quick entry to colors, palettes, posts, wallpapers and tools
-- Live session metrics: pages visited, time on site, traffic used and online users
-- Personal profile and login entry point
 
-### Library
-- **Bookmarks** with an edit dialog
-- **History** viewer with search and grouping
-- **Download manager** with progress, history table, copy link, open file or folder, and re-download
-- **Wallpaper tools**: preview, download and set as desktop wallpaper
+- **Native dashboard** with action cards for browsing, bookmarks, downloads, history, usage, shortcuts, settings, contact and about.
+- **Live session metrics**: pages visited, time on site, traffic used and users online right now, plus a **daily usage chart**.
+- **Search bar with suggestions** and recent queries that can be re-run with one click.
+- **Profile card** showing account state with a direct sign-in entry point.
+- **Personal website card** linking to the developer's portfolio.
+
+### Browsing
+
+- Chromium-based **WebView2** rendering with GPU acceleration and smooth scrolling.
+- Full **navigation bar**: back, forward, home, reload and the current address.
+- **Find bar** (`Ctrl+F`) with match counter and next / previous navigation.
+- **Bookmarks** (`Ctrl+D`) with a themed edit dialog, **history** (`Ctrl+H`) with search and grouping, and **downloads** (`Ctrl+J`).
+- **Normal and hard reload** (`Ctrl+R` / `F5`, `Ctrl+Shift+R`) plus `Alt+←` / `Alt+→` navigation.
+- **External links open in your default browser** while the KopolArt session stays inside the app.
+- **Light and dark themes** shared by the web content and every native dialog.
+
+### Layouts — one client, three shapes
+
+- Switch between **desktop, tablet and mobile layouts** from Settings, for comfortable reading on any screen or window size.
+
+### Wallpapers
+
+- **Preview dialog** with live image information and practical hints for low-resolution or portrait images.
+- Choose the **target monitor** — a specific display or all monitors at once.
+- Six **placement modes**: fill, fit, stretch, center, tile and span.
+- Apply the wallpaper without touching Windows settings.
+
+### Downloads
+
+- **Progress dialog** with live percentage and transferred / total size for every file.
+- **Download history** table with copy link, open file, open containing folder and re-download.
+- One-click **set as wallpaper** from the download list or the tray menu.
+- **Notifications** when a download finishes, with a shortcut to the file.
 
 ### Desktop integration
-- **Tray icon** with quick actions and minimise-to-tray
-- **Notifications** for new posts, checked in the background
-- **Automatic update checks** with an in-app prompt, download dialog and update history
-- **Keyboard shortcuts** for navigation and common actions
-- Create a **desktop shortcut** on request
-- Tracks usage milestones and shows a summary
 
-### Data
-- **Backup and restore** of settings, bookmarks, history and downloads
-- Import workflow with a choice of merge strategy
-- Atomic settings storage so an interrupted write never corrupts your data
+- **Single instance** — launching the app again focuses the running window instead of opening a second copy.
+- **Tray icon** with quick actions and optional minimise-to-tray.
+- **New-post notifications** checked in the background by a headless runner, so alerts arrive even when the window is closed.
+- **Start with Windows** and optional **desktop shortcut** management.
+- **Exit confirmation** so a stray click never closes your session.
+- **Automatic update checks** with an in-app prompt, download dialog and update history.
+- **Keyboard shortcut reference** built into the app.
+
+### Data and privacy
+
+- **Backup and restore** of settings, bookmarks, history and downloads to a portable file.
+- **Import with a merge strategy** so restored data never silently overwrites newer work.
+- **Atomic settings storage** — an interrupted write can never leave a corrupt configuration.
+- **Cache and data controls**: clear cache, clear cookies, clear everything, and optionally clear cache on exit.
+- **Activity log dialog** for diagnosing network and session behaviour.
+- **Milestones** that summarise long-term usage on the usage page.
 
 ## Under the hood
 
@@ -150,10 +186,20 @@ The MIT license covers **code only**. The KopolArt name, logo, wordmark, colour 
 
 ## دربارهٔ نسخهٔ ویندوز
 
-**کپل‌آرت برای ویندوز** نسخهٔ دسکتاپ سایت [kopolart.ir](https://kopolart.ir) است؛ با مرورگر اختصاصی، داشبورد، مدیریت دانلود، جستجو در صفحه، میان‌برهای کیبورد، آیکون سینی سیستم، اعلان مطالب جدید، به‌روزرسانی خودکار و پشتیبان‌گیری از داده‌ها.
+**کپل‌آرت برای ویندوز** نسخهٔ دسکتاپ سایت [kopolart.ir](https://kopolart.ir) است؛ با پنجره و دیالوگ‌های بومی ویندوز و امکاناتی که فقط در دسکتاپ معنا دارند:
 
-- رابط فارسی و راست‌به‌چپ، با تم روشن و تاریک
-- نصب: فایل `kopolart-win-x64.exe` را از بخش Releases دریافت و اجرا کنید (ویندوز ۱۰ نسخهٔ ۱۸۰۹ به بالا، ۶۴ بیتی)
-- این مخزن فقط کد کلاینت ویندوز است؛ محتوا و سرویس سایت جزء آن نیستند.
+- **داشبورد اختصاصی** با کارت‌های دسترسی سریع، آمار زندهٔ نشست و نمودار استفادهٔ روزانه
+- **مرورگر WebView2** با نوار ناوبری کامل و جستجو در صفحه (`Ctrl+F`)
+- **چیدمان دسکتاپ، تبلت و موبایل** برای همان محتوا، قابل تغییر از تنظیمات
+- **مدیریت دانلود** با پنجرهٔ پیشرفت، تاریخچه، کپی لینک، باز کردن پوشه و دانلود مجدد
+- **والپیپر دسکتاپ** با پیش‌نمایش، انتخاب مانیتور و شش حالت جای‌گذاری
+- **آیکون سینی سیستم**، اجرای خودکار با ویندوز، اعلان مطالب جدید و تک‌نمونه‌ای بودن برنامه
+- **به‌روزرسانی خودکار** با تاریخچهٔ به‌روزرسانی‌ها
+- **پشتیبان‌گیری و بازیابی** تنظیمات، نشانک‌ها، تاریخچه و دانلودها
+- رابط فارسی و راست‌به‌چپ با تم روشن و تاریک هماهنگ با محتوای سایت
+
+نصب: فایل `kopolart-win-x64.exe` را از بخش Releases دریافت و اجرا کنید (ویندوز ۱۰ نسخهٔ ۱۸۰۹ به بالا، ۶۴ بیتی).
+
+این مخزن فقط کد کلاینت ویندوز است؛ محتوا و سرویس سایت جزء آن نیستند.
 
 </div>
