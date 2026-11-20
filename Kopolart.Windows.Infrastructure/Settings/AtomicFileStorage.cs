@@ -15,9 +15,6 @@ namespace Kopolart.Windows.Infrastructure.Settings
             _backupFilePath = primaryFilePath + ".bak";
         }
 
-        public string PrimaryFilePath => _primaryFilePath;
-        public string BackupFilePath => _backupFilePath;
-
         public string? TryReadContent()
         {
             if (File.Exists(_primaryFilePath))

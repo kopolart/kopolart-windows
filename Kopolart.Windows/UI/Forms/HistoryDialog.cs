@@ -248,7 +248,7 @@ namespace Kopolart.Windows.UI.Forms
             }
 
             btnNavigate.Enabled = false;
-            lstHistory.BeginUpdate();
+            using var paintScope = lstHistory.SuspendPainting();
             foreach (var h in history)
             {
                 var cat = ContentCategoryHelper.DetermineCategory(h.Url);
@@ -268,7 +268,6 @@ namespace Kopolart.Windows.UI.Forms
                 item.ToolTipText = $"[{badgeName}] {displayTitle}\r\n{h.Url}";
                 lstHistory.Items.Add(item);
             }
-            lstHistory.EndUpdate();
         }
 
         private void LstHistory_SelectedIndexChanged(object? sender, EventArgs e)
@@ -327,13 +326,15 @@ namespace Kopolart.Windows.UI.Forms
 
             Color textColor = isSelected
                 ? SystemColors.HighlightText
-                : e.ColumnIndex switch
-                {
-                    0 => IsDark ? UIConstants.BrandPrimaryLight : UIConstants.BrandPrimary,
-                    1 => IsDark ? Color.White : Color.FromArgb(30, 30, 30),
-                    2 => IsDark ? Color.FromArgb(170, 170, 170) : Color.FromArgb(90, 90, 90),
-                    _ => IsDark ? Color.FromArgb(200, 200, 200) : Color.FromArgb(60, 60, 60)
-                };
+                : SystemAccessibility.IsHighContrast
+                    ? SystemColors.WindowText
+                    : e.ColumnIndex switch
+                    {
+                        0 => IsDark ? UIConstants.BrandPrimaryLight : UIConstants.BrandPrimary,
+                        1 => IsDark ? Color.White : Color.FromArgb(30, 30, 30),
+                        2 => IsDark ? Color.FromArgb(170, 170, 170) : Color.FromArgb(90, 90, 90),
+                        _ => IsDark ? Color.FromArgb(200, 200, 200) : Color.FromArgb(60, 60, 60)
+                    };
 
             var flags = (e.ColumnIndex == 2 ? TextFormatFlags.Right : TextFormatFlags.Left) |
                         TextFormatFlags.VerticalCenter |
@@ -352,7 +353,8 @@ namespace Kopolart.Windows.UI.Forms
 
             if (isBookmarked)
             {
-                using var goldPen = new Pen(UIConstants.BrandGold, 1.5f);
+                Color borderColor = SystemAccessibility.IsHighContrast ? SystemColors.Highlight : UIConstants.BrandGold;
+                using var goldPen = new Pen(borderColor, 1.5f);
                 int top = e.Bounds.Top;
                 int bottom = e.Bounds.Bottom - 1;
 

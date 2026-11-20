@@ -60,12 +60,15 @@ namespace Kopolart.Windows.UI.Helpers
 
         public void ApplyDarkModeToUI(bool isDark)
         {
+            HighContrastTheme.Restore(_form);
+
             if (_form.IsHandleCreated)
             {
                 NativeMethods.SetImmersiveDarkMode(_form.Handle, isDark);
             }
 
             _webViewController.IsDarkMode = isDark;
+            _webViewController.ApplyAccessibilityZoom();
             _navOverlayProvider()?.ApplyDarkMode(isDark);
             _loaderView.ApplyDarkMode(isDark);
             _navBarProvider()?.ApplyDarkMode(isDark);
@@ -90,6 +93,8 @@ namespace Kopolart.Windows.UI.Helpers
             }
 
             _webViewController.UpdateLayoutBounds();
+
+            HighContrastTheme.Apply(_form);
         }
 
         /// <summary>

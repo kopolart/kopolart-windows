@@ -1,4 +1,5 @@
 using Kopolart.Windows.UI.Helpers;
+using System;
 using System.Windows.Forms;
 
 namespace Kopolart.Windows.UI.Forms
@@ -25,6 +26,7 @@ namespace Kopolart.Windows.UI.Forms
         {
             NativeMethods.SetImmersiveDarkMode(Handle, IsDark);
             ApplyThemeColors(IsDark);
+            HighContrastTheme.Apply(this);
         }
 
         /// <summary>
@@ -36,7 +38,27 @@ namespace Kopolart.Windows.UI.Forms
             if (!IsHandleCreated) return;
 
             NativeMethods.SetImmersiveDarkMode(Handle, isDark);
+            HighContrastTheme.Restore(this);
             ApplyThemeColors(isDark);
+            HighContrastTheme.Apply(this);
+            Invalidate(true);
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            SystemAccessibility.Changed += OnSystemAccessibilityChanged;
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            SystemAccessibility.Changed -= OnSystemAccessibilityChanged;
+            base.OnHandleDestroyed(e);
+        }
+
+        private void OnSystemAccessibilityChanged(object? sender, SystemVisualSettingsChangedEventArgs e)
+        {
+            ApplyDarkMode(IsDark);
         }
 
         protected abstract void ApplyThemeColors(bool isDark);

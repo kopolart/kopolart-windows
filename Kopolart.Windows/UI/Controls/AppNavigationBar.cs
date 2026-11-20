@@ -211,21 +211,18 @@ namespace Kopolart.Windows.UI.Controls
 
         public void ApplyDarkMode(bool isDark)
         {
-            Color bg = isDark ? UIConstants.DarkMode.MenuStripBackColor : UIConstants.NavBarLightBg;
-            BackColor = bg;
+            bool highContrast = SystemAccessibility.IsHighContrast;
 
-            if (isDark)
-            {
-                _menuStrip.BackColor = bg;
-                _menuStrip.ForeColor = UIConstants.DarkMode.MenuStripForeColor;
-                _menuStrip.Renderer = new DarkMenuRenderer();
-            }
-            else
-            {
-                _menuStrip.BackColor = bg;
-                _menuStrip.ForeColor = SystemColors.ControlText;
-                _menuStrip.Renderer = new LightMenuRenderer();
-            }
+            Color bg = highContrast
+                ? SystemColors.Control
+                : (isDark ? UIConstants.DarkMode.MenuStripBackColor : UIConstants.NavBarLightBg);
+
+            BackColor = bg;
+            _menuStrip.BackColor = bg;
+            _menuStrip.ForeColor = highContrast
+                ? SystemColors.ControlText
+                : (isDark ? UIConstants.DarkMode.MenuStripForeColor : SystemColors.ControlText);
+            _menuStrip.Renderer = isDark ? new DarkMenuRenderer() : new LightMenuRenderer();
 
             _navigationButtonsHandler.ApplyDarkModeToNavigationControls(isDark);
             _navigationButtonsHandler.UpdateThemeButtonState();

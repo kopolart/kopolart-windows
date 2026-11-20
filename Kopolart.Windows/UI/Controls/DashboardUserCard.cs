@@ -175,6 +175,14 @@ namespace Kopolart.Windows.UI.Controls
             Color hoverCardBg = _isDark ? UIConstants.DarkMode.CardBackgroundHoverDark : UIConstants.CardBackgroundHoverLight;
             Color standardBorder = _isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight;
 
+            bool highContrast = SystemAccessibility.IsHighContrast;
+            if (highContrast)
+            {
+                baseCardBg = SystemColors.Window;
+                hoverCardBg = SystemColors.Control;
+                standardBorder = SystemColors.ControlDark;
+            }
+
             if (_isDateModeActive)
             {
                 // 1. Fill card background with hover highlight if hovered
@@ -186,7 +194,7 @@ namespace Kopolart.Windows.UI.Controls
 
                 // 2. Stroke with border (red if logged in, standard border if guest)
                 Color borderColor = IsLoggedIn
-                    ? (_isDark ? UIConstants.DarkRedDark : UIConstants.DarkRed)
+                    ? (highContrast ? SystemColors.Highlight : _isDark ? UIConstants.DarkRedDark : UIConstants.DarkRed)
                     : standardBorder;
                 using (var borderPen = new Pen(borderColor, borderThickness))
                 {
@@ -195,8 +203,8 @@ namespace Kopolart.Windows.UI.Controls
 
                 // 3. Draw Centered Persian Date
                 Color accentColor = IsLoggedIn
-                    ? (_isDark ? UIConstants.DarkRedDark : UIConstants.DarkRed)
-                    : (_isDark ? Color.FromArgb(242, 169, 59) : UIConstants.BrandPrimary);
+                    ? borderColor
+                    : (highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(242, 169, 59) : UIConstants.BrandPrimary);
                 DrawDateContent(g, accentColor);
             }
             else if (IsLoggedIn)
@@ -209,7 +217,7 @@ namespace Kopolart.Windows.UI.Controls
                 }
 
                 // 2. Stroke with consistent red color (equal width on all sides)
-                Color redBorder = _isDark ? UIConstants.DarkRedDark : UIConstants.DarkRed;
+                Color redBorder = highContrast ? SystemColors.Highlight : _isDark ? UIConstants.DarkRedDark : UIConstants.DarkRed;
                 using (var borderPen = new Pen(redBorder, borderThickness))
                 {
                     g.DrawPath(borderPen, path);
@@ -271,7 +279,7 @@ namespace Kopolart.Windows.UI.Controls
             string displayName = rawName.Length > 20 ? (rawName.Substring(0, 18) + "...") : rawName;
             string greeting = string.Format(AppConstants.Strings.UserWelcomeGreeting, displayName);
 
-            Color titleColor = _isDark ? Color.FromArgb(249, 246, 240) : Color.FromArgb(32, 28, 24);
+            Color titleColor = SystemAccessibility.IsHighContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(249, 246, 240) : Color.FromArgb(32, 28, 24);
 
             using var titleFont = FontManager.CreateBlackFont(11.5F);
             var textSize = g.MeasureString(greeting, titleFont);
@@ -331,7 +339,7 @@ namespace Kopolart.Windows.UI.Controls
                 _persianTodayDate = PersianDateHelper.GetPersianTodayDateString();
             }
 
-            Color titleColor = _isDark ? Color.FromArgb(249, 246, 240) : Color.FromArgb(32, 28, 24);
+            Color titleColor = SystemAccessibility.IsHighContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(249, 246, 240) : Color.FromArgb(32, 28, 24);
 
             using var titleFont = FontManager.CreateBlackFont(11.5F);
             var textSize = g.MeasureString(_persianTodayDate, titleFont);
@@ -386,10 +394,11 @@ namespace Kopolart.Windows.UI.Controls
 
         private void DrawGuestContent(Graphics g, int midX)
         {
-            Color titleColor = _isDark ? Color.FromArgb(249, 246, 240) : Color.FromArgb(32, 28, 24);
-            Color subColor = _isDark ? Color.FromArgb(189, 181, 170) : Color.FromArgb(105, 95, 88);
-            Color loginColor = _isDark ? Color.FromArgb(242, 169, 59) : UIConstants.BrandPrimary;
-            Color registerColor = _isDark ? UIConstants.BrandSlateBlueDark : UIConstants.BrandSlateBlue;
+            bool highContrast = SystemAccessibility.IsHighContrast;
+            Color titleColor = highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(249, 246, 240) : Color.FromArgb(32, 28, 24);
+            Color subColor = highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(189, 181, 170) : Color.FromArgb(105, 95, 88);
+            Color loginColor = highContrast ? SystemColors.Highlight : _isDark ? Color.FromArgb(242, 169, 59) : UIConstants.BrandPrimary;
+            Color registerColor = highContrast ? SystemColors.Highlight : _isDark ? UIConstants.BrandSlateBlueDark : UIConstants.BrandSlateBlue;
 
             var titleFont = FontManager.GetBlackFont(11F);
             var subFont = FontManager.GetFont(8.5F, FontStyle.Regular);

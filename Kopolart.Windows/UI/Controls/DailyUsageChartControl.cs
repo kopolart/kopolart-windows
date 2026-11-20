@@ -194,15 +194,21 @@ namespace Kopolart.Windows.UI.Controls
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
 
+            bool highContrast = SystemAccessibility.IsHighContrast;
+
             // Background
-            var bgCol = _isDark ? UIConstants.DarkMode.CardBackgroundDark : UIConstants.CardBackgroundLight;
+            var bgCol = highContrast
+                ? SystemColors.Window
+                : _isDark ? UIConstants.DarkMode.CardBackgroundDark : UIConstants.CardBackgroundLight;
             using (var bgBrush = new SolidBrush(bgCol))
             {
                 g.FillRectangle(bgBrush, ClientRectangle);
             }
 
             // Border
-            var borderCol = _isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight;
+            var borderCol = highContrast
+                ? SystemColors.ControlDark
+                : _isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight;
             using (var borderPen = new Pen(borderCol, 1))
             {
                 g.DrawRectangle(borderPen, 0, 0, Width - 1, Height - 1);
@@ -211,7 +217,7 @@ namespace Kopolart.Windows.UI.Controls
             if (_items.Count == 0)
             {
                 string emptyText = TextManager.GetString("DailyUsageNoData");
-                using var emptyBrush = new SolidBrush(_isDark ? Color.Gray : Color.DarkGray);
+                using var emptyBrush = new SolidBrush(highContrast ? SystemColors.WindowText : _isDark ? Color.Gray : Color.DarkGray);
                 using var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
                 g.DrawString(emptyText, Font, emptyBrush, ClientRectangle, sf);
                 return;
@@ -235,12 +241,12 @@ namespace Kopolart.Windows.UI.Controls
             float chartRight = leftPad + chartWidth;
 
             // Colors
-            Color gridLineCol = _isDark ? Color.FromArgb(50, 50, 50) : Color.FromArgb(235, 228, 220);
-            Color textCol = _isDark ? Color.FromArgb(170, 170, 170) : Color.FromArgb(110, 100, 90);
-            Color barColNormal = _isDark ? Color.FromArgb(145, 110, 85) : Color.FromArgb(196, 154, 108);
-            Color barColToday = _isDark ? Color.FromArgb(195, 140, 95) : Color.FromArgb(176, 125, 79);
-            Color barColHover = _isDark ? Color.FromArgb(220, 165, 115) : Color.FromArgb(150, 100, 55);
-            Color avgLineCol = _isDark ? Color.FromArgb(100, 160, 210) : Color.FromArgb(65, 130, 185);
+            Color gridLineCol = highContrast ? SystemColors.ControlDark : _isDark ? Color.FromArgb(50, 50, 50) : Color.FromArgb(235, 228, 220);
+            Color textCol = highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(170, 170, 170) : Color.FromArgb(110, 100, 90);
+            Color barColNormal = highContrast ? SystemColors.ControlText : _isDark ? Color.FromArgb(145, 110, 85) : Color.FromArgb(196, 154, 108);
+            Color barColToday = highContrast ? SystemColors.Highlight : _isDark ? Color.FromArgb(195, 140, 95) : Color.FromArgb(176, 125, 79);
+            Color barColHover = highContrast ? SystemColors.Highlight : _isDark ? Color.FromArgb(220, 165, 115) : Color.FromArgb(150, 100, 55);
+            Color avgLineCol = highContrast ? SystemColors.ControlText : _isDark ? Color.FromArgb(100, 160, 210) : Color.FromArgb(65, 130, 185);
 
             // Draw horizontal grid lines & Y-axis scale (RTL: Y-axis scale on the right)
             int gridStepCount = 4;
@@ -299,7 +305,7 @@ namespace Kopolart.Windows.UI.Controls
 
                     if (isHovered || isToday)
                     {
-                        using var outlinePen = new Pen(Color.FromArgb(50, Color.White), 1);
+                        using var outlinePen = new Pen(Color.FromArgb(50, highContrast ? SystemColors.Window : Color.White), 1);
                         g.DrawPath(outlinePen, path);
                     }
                 }
@@ -307,7 +313,7 @@ namespace Kopolart.Windows.UI.Controls
                 {
                     // Draw subtle 2px baseline pill for 0 usage days
                     var zeroRect = new RectangleF(barLeft, baselineY - 2, barWidth, 2);
-                    using var zeroBrush = new SolidBrush(_isDark ? Color.FromArgb(60, 60, 60) : Color.FromArgb(220, 215, 210));
+                    using var zeroBrush = new SolidBrush(highContrast ? SystemColors.ControlDark : _isDark ? Color.FromArgb(60, 60, 60) : Color.FromArgb(220, 215, 210));
                     g.FillRectangle(zeroBrush, zeroRect);
                 }
 
@@ -434,8 +440,9 @@ namespace Kopolart.Windows.UI.Controls
                 g.FillPath(shadowBrush, shadowPath);
             }
 
-            Color cardBg = _isDark ? Color.FromArgb(50, 48, 46) : Color.White;
-            Color cardBorder = _isDark ? Color.FromArgb(90, 80, 70) : Color.FromArgb(200, 180, 160);
+            bool highContrast = SystemAccessibility.IsHighContrast;
+            Color cardBg = highContrast ? SystemColors.Window : _isDark ? Color.FromArgb(50, 48, 46) : Color.White;
+            Color cardBorder = highContrast ? SystemColors.ControlDark : _isDark ? Color.FromArgb(90, 80, 70) : Color.FromArgb(200, 180, 160);
 
             using (var cardPath = CreateRoundedRectanglePath(cardRect, 6))
             using (var cardBrush = new SolidBrush(cardBg))
@@ -446,8 +453,8 @@ namespace Kopolart.Windows.UI.Controls
             }
 
             // Card text
-            using var titleBrush = new SolidBrush(_isDark ? Color.White : Color.FromArgb(40, 40, 40));
-            using var valBrush = new SolidBrush(_isDark ? Color.FromArgb(215, 170, 130) : Color.FromArgb(160, 110, 60));
+            using var titleBrush = new SolidBrush(highContrast ? SystemColors.WindowText : _isDark ? Color.White : Color.FromArgb(40, 40, 40));
+            using var valBrush = new SolidBrush(highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(215, 170, 130) : Color.FromArgb(160, 110, 60));
 
             float textX = cardRect.Right - 10;
             g.DrawString(dateStr, _cachedHoverTitleFont!, titleBrush, textX, cardRect.Top + (titleSize.Height / 2) + 5, _sfHover);

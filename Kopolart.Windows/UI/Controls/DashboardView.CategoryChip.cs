@@ -128,15 +128,21 @@ namespace Kopolart.Windows.UI.Controls
 
                 using var path = CreateRoundedRectangle(bounds, cornerRadius);
 
-                Color accentColor = _isDark ? AccentColorDark : AccentColorLight;
-                Color badgeBg = _isDark ? BadgeBgDark : BadgeBgLight;
-                Color chipBorder = _isHovered
-                    ? accentColor
-                    : (_isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight);
+                bool highContrast = SystemAccessibility.IsHighContrast;
 
-                Color chipBg = _isDark
-                    ? (_isHovered ? UIConstants.DarkMode.CardBackgroundHoverDark : UIConstants.DarkMode.CardBackgroundDark)
-                    : (_isHovered ? UIConstants.CardBackgroundHoverLight : UIConstants.CardBackgroundLight);
+                Color accentColor = highContrast ? SystemColors.Highlight : _isDark ? AccentColorDark : AccentColorLight;
+                Color badgeBg = highContrast ? SystemColors.Control : _isDark ? BadgeBgDark : BadgeBgLight;
+                Color chipBorder = highContrast
+                    ? SystemColors.ControlDark
+                    : _isHovered
+                        ? accentColor
+                        : (_isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight);
+
+                Color chipBg = highContrast
+                    ? SystemColors.Window
+                    : _isDark
+                        ? (_isHovered ? UIConstants.DarkMode.CardBackgroundHoverDark : UIConstants.DarkMode.CardBackgroundDark)
+                        : (_isHovered ? UIConstants.CardBackgroundHoverLight : UIConstants.CardBackgroundLight);
 
                 // Fill chip background
                 using (var bgBrush = new SolidBrush(chipBg))
@@ -187,7 +193,7 @@ namespace Kopolart.Windows.UI.Controls
                     g.FillPath(badgeBrush, badgePath);
                 }
 
-                Color badgeBorderColor = _isDark ? BorderDark : BorderLight;
+                Color badgeBorderColor = highContrast ? SystemColors.ControlDark : _isDark ? BorderDark : BorderLight;
                 using (var badgePen = new Pen(badgeBorderColor, 1.0f))
                 {
                     g.DrawPath(badgePen, badgePath);
@@ -225,7 +231,7 @@ namespace Kopolart.Windows.UI.Controls
                     using var pillPath = CreateRoundedRectangle(pillRect, pillH / 2f);
 
                     // Background: consistent StatusRed (#C62828)
-                    Color statusRed = Color.FromArgb(198, 40, 40);
+                    Color statusRed = highContrast ? SystemColors.Highlight : Color.FromArgb(198, 40, 40);
                     using (var countBgBrush = new SolidBrush(statusRed))
                     {
                         g.FillPath(countBgBrush, pillPath);
@@ -238,7 +244,7 @@ namespace Kopolart.Windows.UI.Controls
                     }
 
                     // Bold white Persian number, vertically centered with breathing room
-                    using (var countTextBrush = new SolidBrush(Color.White))
+                    using (var countTextBrush = new SolidBrush(highContrast ? SystemColors.HighlightText : Color.White))
                     {
                         using var countSf = new StringFormat
                         {
@@ -253,7 +259,7 @@ namespace Kopolart.Windows.UI.Controls
                 }
 
                 // Draw title
-                Color textColor = _isDark ? Color.FromArgb(249, 246, 240) : Color.FromArgb(32, 28, 24);
+                Color textColor = highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(249, 246, 240) : Color.FromArgb(32, 28, 24);
                 var textRect = new Rectangle(textX, (Height - textSize.Height) / 2, textSize.Width, textSize.Height);
                 using (var textBrush = new SolidBrush(textColor))
                 {

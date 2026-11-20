@@ -129,7 +129,7 @@ namespace Kopolart.Windows.UI.Forms
             if (IsDisposed) return;
             if (InvokeRequired)
             {
-                try { BeginInvoke(new Action(UpdateProgress)); } catch { }
+                try { BeginInvoke(new Action(UpdateProgress)); } catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[DownloadProgressDialog] BeginInvoke UpdateProgress failed: {ex.Message}"); }
             }
             else
             {
@@ -142,7 +142,7 @@ namespace Kopolart.Windows.UI.Forms
             if (IsDisposed) return;
             if (InvokeRequired)
             {
-                try { BeginInvoke(new Action(HandleStateChanged)); } catch { }
+                try { BeginInvoke(new Action(HandleStateChanged)); } catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[DownloadProgressDialog] BeginInvoke HandleStateChanged failed: {ex.Message}"); }
             }
             else
             {

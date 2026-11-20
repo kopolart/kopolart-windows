@@ -1,4 +1,5 @@
 ﻿using Kopolart.Windows.UI.Constants;
+using Kopolart.Windows.UI.Helpers;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -26,8 +27,6 @@ namespace Kopolart.Windows.UI.Controls.NavBar
         private bool _isSecure = true;
 
         public event EventHandler? EditingStarted;
-
-        public string CurrentUrl => _currentUrl;
 
         public NavBarOmniboxControl()
         {
@@ -171,7 +170,11 @@ namespace Kopolart.Windows.UI.Controls.NavBar
         {
             if (_btnAction == null) return;
 
-            if (_isDark)
+            if (SystemAccessibility.IsHighContrast)
+            {
+                _btnAction.ForeColor = _isActionHovered ? SystemColors.Highlight : SystemColors.ControlText;
+            }
+            else if (_isDark)
             {
                 _btnAction.ForeColor = _isActionHovered ? Color.White : Color.FromArgb(170, 170, 170);
             }
@@ -191,7 +194,10 @@ namespace Kopolart.Windows.UI.Controls.NavBar
                     Clipboard.SetText(textToCopy);
                     _toolTip.Show("پیوند کپی شد ✓", _btnAction, 0, -25, 1200);
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[NavBarOmniboxControl] Failed to copy link to clipboard: {ex.Message}");
+                }
             }
         }
 
@@ -229,13 +235,17 @@ namespace Kopolart.Windows.UI.Controls.NavBar
             if (_isSecure)
             {
                 _lblSecurity.Text = "\uE72E"; // Lock
-                _lblSecurity.ForeColor = _isDark ? UIConstants.LiveGreenDark : UIConstants.LiveGreenLight;
+                _lblSecurity.ForeColor = SystemAccessibility.IsHighContrast
+                    ? SystemColors.ControlText
+                    : (_isDark ? UIConstants.LiveGreenDark : UIConstants.LiveGreenLight);
                 _toolTip.SetToolTip(_lblSecurity, "اتصال امن (HTTPS)");
             }
             else
             {
                 _lblSecurity.Text = "\uE774"; // Globe / Insecure
-                _lblSecurity.ForeColor = _isDark ? Color.FromArgb(180, 180, 180) : Color.FromArgb(120, 120, 120);
+                _lblSecurity.ForeColor = SystemAccessibility.IsHighContrast
+                    ? SystemColors.GrayText
+                    : (_isDark ? Color.FromArgb(180, 180, 180) : Color.FromArgb(120, 120, 120));
                 _toolTip.SetToolTip(_lblSecurity, "کپل‌آرت");
             }
         }
@@ -273,8 +283,14 @@ namespace Kopolart.Windows.UI.Controls.NavBar
             _isDark = isDark;
             if (_txtUrl == null) return;
 
-            Color bg = isDark ? UIConstants.DarkMode.CardBackgroundDark : UIConstants.CardBackgroundLight;
-            Color fg = isDark ? UIConstants.DarkMode.MenuStripForeColor : UIConstants.TextThemeColor;
+            bool highContrast = SystemAccessibility.IsHighContrast;
+
+            Color bg = highContrast
+                ? SystemColors.Window
+                : (isDark ? UIConstants.DarkMode.CardBackgroundDark : UIConstants.CardBackgroundLight);
+            Color fg = highContrast
+                ? SystemColors.WindowText
+                : (isDark ? UIConstants.DarkMode.MenuStripForeColor : UIConstants.TextThemeColor);
 
             _txtUrl.BackColor = bg;
             _txtUrl.ForeColor = fg;
@@ -293,29 +309,51 @@ namespace Kopolart.Windows.UI.Controls.NavBar
             var bounds = new Rectangle(0, 0, ClientSize.Width - 1, ClientSize.Height - 1);
             using var path = CreateRoundedRectanglePath(bounds, 6);
 
+            bool highContrast = SystemAccessibility.IsHighContrast;
+
             // Fill background
-            Color bg = _isDark ? UIConstants.DarkMode.CardBackgroundDark : UIConstants.CardBackgroundLight;
+            Color bg = highContrast
+                ? SystemColors.Window
+                : (_isDark ? UIConstants.DarkMode.CardBackgroundDark : UIConstants.CardBackgroundLight);
             using (var brush = new SolidBrush(bg))
             {
                 e.Graphics.FillPath(brush, path);
             }
 
-            // Draw border
+            // Draw border. The system accent (or the high-contrast highlight) is used for
+            // keyboard focus so the ring stays visible and matches the user's selection color.
             Color borderColor;
             if (_isFocused)
             {
-                borderColor = _isDark ? UIConstants.DarkMode.BrandPrimary : UIConstants.BrandPrimary;
+                if (highContrast)
+                {
+                    borderColor = SystemColors.Highlight;
+                }
+                else if (SystemAccessibility.AreKeyboardCuesVisible)
+                {
+                    borderColor = SystemAccessibility.GetAccent(_isDark ? UIConstants.DarkMode.BrandPrimary : UIConstants.BrandPrimary);
+                }
+                else
+                {
+                    borderColor = _isDark ? UIConstants.DarkMode.BrandPrimary : UIConstants.BrandPrimary;
+                }
             }
             else if (_isHovered)
             {
-                borderColor = _isDark ? Color.FromArgb(110, 105, 100) : Color.FromArgb(190, 175, 160);
+                borderColor = highContrast
+                    ? SystemColors.ControlText
+                    : (_isDark ? Color.FromArgb(110, 105, 100) : Color.FromArgb(190, 175, 160));
             }
             else
             {
-                borderColor = _isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight;
+                borderColor = highContrast
+                    ? SystemColors.ControlDark
+                    : (_isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight);
             }
 
-            float stroke = _isFocused ? 1.5F : 1.0F;
+            float stroke = _isFocused
+                ? Math.Max(1.5F, SystemAccessibility.FocusBorderWidth)
+                : 1.0F;
             using var pen = new Pen(borderColor, stroke);
             e.Graphics.DrawPath(pen, path);
         }

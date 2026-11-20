@@ -34,8 +34,6 @@ namespace Kopolart.Windows.UI.Controls
 
         private Color[] _activeDotColors = LightDotColors;
 
-        public int ActiveDot => _activeDot;
-
         /// <summary>
         /// Creates a renderer with the specified dot size.
         /// </summary>

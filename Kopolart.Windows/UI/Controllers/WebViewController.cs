@@ -52,6 +52,23 @@ namespace Kopolart.Windows.UI.Controllers
         public bool IsShowingOfflinePage => _offlineCoordinator.IsShowingOfflinePage;
         public bool IsDarkMode { get; set; }
 
+        private float _accessibilityZoomFactor = 1f;
+
+        /// <summary>
+        /// Applies the Windows text-scale setting to the web content. The previous hard-coded
+        /// 1.0 lock is kept: user-initiated zoom (Ctrl+wheel) is still reverted, but to the
+        /// accessibility factor instead of always resetting to 100%.
+        /// </summary>
+        public void ApplyAccessibilityZoom()
+        {
+            _accessibilityZoomFactor = SystemAccessibility.WebViewZoomFactor;
+
+            if (_webView != null && !_webView.IsDisposed && _webView.CoreWebView2 != null)
+            {
+                _webView.ZoomFactor = _accessibilityZoomFactor;
+            }
+        }
+
         public string DocumentTitle => _offlineCoordinator.GetDocumentTitle(_webView?.CoreWebView2);
         public bool CanGoBack => _webView?.CanGoBack ?? false;
         public bool CanGoForward => _webView?.CanGoForward ?? false;
@@ -273,6 +290,9 @@ namespace Kopolart.Windows.UI.Controllers
 
         private void OnNavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
         {
+            // WebView2 drops the zoom on a new document, so re-apply the accessibility factor.
+            ApplyAccessibilityZoom();
+
             if (_offlineCoordinator.OfflineNavigationId.HasValue && e.NavigationId == _offlineCoordinator.OfflineNavigationId.Value)
             {
                 _offlineCoordinator.OfflineNavigationId = null;
@@ -338,12 +358,13 @@ namespace Kopolart.Windows.UI.Controllers
             {
                 WebView2SecurityManager.ApplySecuritySettings(_webView.CoreWebView2);
                 _webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
-                _webView.ZoomFactor = 1.0;
+                _accessibilityZoomFactor = SystemAccessibility.WebViewZoomFactor;
+                _webView.ZoomFactor = _accessibilityZoomFactor;
                 _webView.ZoomFactorChanged += (s, e) =>
                 {
-                    if (_webView.ZoomFactor != 1.0)
+                    if (Math.Abs(_webView.ZoomFactor - _accessibilityZoomFactor) > 0.001)
                     {
-                        _webView.ZoomFactor = 1.0;
+                        _webView.ZoomFactor = _accessibilityZoomFactor;
                     }
                 };
             }

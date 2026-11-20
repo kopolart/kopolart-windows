@@ -545,6 +545,7 @@ namespace Kopolart.Windows.UI.Forms
 
         private void LoadLogs()
         {
+            using var paintScope = lstLogs.SuspendPainting();
             lstLogs.Items.Clear();
             var list = _settingsManager.GetUsageLog();
             if (list != null && list.Count > 0)
@@ -694,7 +695,10 @@ namespace Kopolart.Windows.UI.Forms
                             {
                                 BeginInvoke(new Action(LoadLogs));
                             }
-                            catch { }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[AppLogsDialog] BeginInvoke LoadLogs failed: {ex.Message}");
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -832,7 +836,8 @@ namespace Kopolart.Windows.UI.Forms
         {
             if (sender is Panel card && _currentCardBorderColor != Color.Transparent)
             {
-                using var p = new Pen(_currentCardBorderColor, 1);
+                Color borderColor = SystemAccessibility.IsHighContrast ? SystemColors.ControlDark : _currentCardBorderColor;
+                using var p = new Pen(borderColor, 1);
                 e.Graphics.DrawRectangle(p, 0, 0, card.Width - 1, card.Height - 1);
             }
         }

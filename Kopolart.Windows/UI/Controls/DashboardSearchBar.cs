@@ -278,16 +278,21 @@ namespace Kopolart.Windows.UI.Controls
             if (w <= 0 || h <= 0) return;
 
             var cat = CurrentCategory;
-            Color accentColor = cat.GetAccent(_isDark);
+            bool highContrast = SystemAccessibility.IsHighContrast;
+            Color accentColor = highContrast ? SystemColors.Highlight : cat.GetAccent(_isDark);
 
             // 1. Draw Card Background and Border
-            Color cardBg = _isDark
-                ? UIConstants.DarkMode.CardBackgroundDark
-                : UIConstants.CardBackgroundLight;
+            Color cardBg = highContrast
+                ? SystemColors.Window
+                : _isDark
+                    ? UIConstants.DarkMode.CardBackgroundDark
+                    : UIConstants.CardBackgroundLight;
 
-            Color cardBorder = _isDark
-                ? UIConstants.DarkMode.CardBorderDark
-                : UIConstants.CardBorderLight;
+            Color cardBorder = highContrast
+                ? SystemColors.ControlDark
+                : _isDark
+                    ? UIConstants.DarkMode.CardBorderDark
+                    : UIConstants.CardBorderLight;
 
             var cardRect = new RectangleF(0.5f, 0.5f, w - 1f, h - 1f);
             using (var cardPath = CreateRoundedRectanglePath(cardRect, 10f))
@@ -309,7 +314,9 @@ namespace Kopolart.Windows.UI.Controls
 
             // 3. Draw Vertical Divider between Category Button and Input
             int dividerX = _categoryBtnRect.Left - 5;
-            using (var dividerPen = new Pen(_isDark ? Color.FromArgb(60, 255, 255, 255) : Color.FromArgb(40, 0, 0, 0), 1f))
+            using (var dividerPen = new Pen(highContrast
+                ? SystemColors.ControlDark
+                : _isDark ? Color.FromArgb(60, 255, 255, 255) : Color.FromArgb(40, 0, 0, 0), 1f))
             {
                 g.DrawLine(dividerPen, dividerX, 10, dividerX, h - 10);
             }
@@ -784,7 +791,10 @@ namespace Kopolart.Windows.UI.Controls
                     _suggestionsDropDown.Bounds.Contains(screenPt))
                     return true;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DashboardSearchBar] Failed to check suggestion drop-down bounds: {ex.Message}");
+            }
             return false;
         }
 
@@ -1127,10 +1137,11 @@ namespace Kopolart.Windows.UI.Controls
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
-                Color cardBg = _isDark ? UIConstants.DarkMode.CardBackgroundDark : UIConstants.CardBackgroundLight;
-                Color borderClr = _isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight;
-                Color textPrimary = _isDark ? UIConstants.DarkMode.MenuStripForeColor : UIConstants.TextThemeColor;
-                Color textSecondary = _isDark ? Color.FromArgb(160, 160, 160) : Color.FromArgb(120, 120, 120);
+                bool highContrast = SystemAccessibility.IsHighContrast;
+                Color cardBg = highContrast ? SystemColors.Window : _isDark ? UIConstants.DarkMode.CardBackgroundDark : UIConstants.CardBackgroundLight;
+                Color borderClr = highContrast ? SystemColors.ControlDark : _isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight;
+                Color textPrimary = highContrast ? SystemColors.WindowText : _isDark ? UIConstants.DarkMode.MenuStripForeColor : UIConstants.TextThemeColor;
+                Color textSecondary = highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(160, 160, 160) : Color.FromArgb(120, 120, 120);
 
                 // Background & Border
                 using (var bgBrush = new SolidBrush(cardBg))
@@ -1170,11 +1181,17 @@ namespace Kopolart.Windows.UI.Controls
                     var itemRect = new Rectangle(0, itemY, Width, ItemHeight);
 
                     // Hover background
-                    if (i == _hoveredIndex)
+                    bool rowHovered = i == _hoveredIndex;
+                    Color rowPrimary = highContrast && rowHovered ? SystemColors.HighlightText : textPrimary;
+                    Color rowSecondary = highContrast && rowHovered ? SystemColors.HighlightText : textSecondary;
+
+                    if (rowHovered)
                     {
-                        Color hoverBg = _isDark
-                            ? UIConstants.DarkMode.CardBackgroundHoverDark
-                            : UIConstants.CardBackgroundHoverLight;
+                        Color hoverBg = highContrast
+                            ? SystemColors.Highlight
+                            : _isDark
+                                ? UIConstants.DarkMode.CardBackgroundHoverDark
+                                : UIConstants.CardBackgroundHoverLight;
 
                         using var hoverBrush = new SolidBrush(hoverBg);
                         g.FillRectangle(hoverBrush, itemRect);
@@ -1183,7 +1200,9 @@ namespace Kopolart.Windows.UI.Controls
                     // Divider between rows
                     if (i > 0)
                     {
-                        using var divPen = new Pen(_isDark ? Color.FromArgb(40, 255, 255, 255) : Color.FromArgb(25, 0, 0, 0));
+                        using var divPen = new Pen(highContrast
+                            ? SystemColors.ControlDark
+                            : _isDark ? Color.FromArgb(40, 255, 255, 255) : Color.FromArgb(25, 0, 0, 0));
                         g.DrawLine(divPen, 12, itemY, Width - 12, itemY);
                     }
 
@@ -1197,7 +1216,7 @@ namespace Kopolart.Windows.UI.Controls
 
                     // Chevron (Left side in RTL)
                     var chevronFont = FontManager.GetIconFont(9.5f);
-                    using (var chevronBrush = new SolidBrush(textSecondary))
+                    using (var chevronBrush = new SolidBrush(rowSecondary))
                     {
                         var chevSz = g.MeasureString(KopolArtFaIcons.AngleLeft, chevronFont);
                         g.DrawString(KopolArtFaIcons.AngleLeft, chevronFont, chevronBrush, 14, itemY + (ItemHeight - chevSz.Height) / 2f);
@@ -1216,18 +1235,18 @@ namespace Kopolart.Windows.UI.Controls
                         var titleRect = new Rectangle(textLeft, itemY + 8, textWidth, 20);
                         var subRect = new Rectangle(textLeft, itemY + 28, textWidth, 18);
 
-                        TextRenderer.DrawText(g, item.Label, titleFont, titleRect, textPrimary,
+                        TextRenderer.DrawText(g, item.Label, titleFont, titleRect, rowPrimary,
                             TextFormatFlags.Right | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
 
                         var subFont = FontManager.GetFont(8.5f, FontStyle.Regular);
-                        TextRenderer.DrawText(g, item.Value, subFont, subRect, textSecondary,
+                        TextRenderer.DrawText(g, item.Value, subFont, subRect, rowSecondary,
                             TextFormatFlags.Right | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
                     }
                     else
                     {
                         // 1 centered line: Title
                         var titleRect = new Rectangle(textLeft, itemY, textWidth, ItemHeight);
-                        TextRenderer.DrawText(g, item.Label, titleFont, titleRect, textPrimary,
+                        TextRenderer.DrawText(g, item.Label, titleFont, titleRect, rowPrimary,
                             TextFormatFlags.Right | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
                     }
                 }

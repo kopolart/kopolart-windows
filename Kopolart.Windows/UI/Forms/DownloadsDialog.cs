@@ -324,7 +324,7 @@ namespace Kopolart.Windows.UI.Forms
                 _ => null
             };
 
-            lstDownloads.BeginUpdate();
+            using var paintScope = lstDownloads.SuspendPainting();
             lstDownloads.Items.Clear();
 
             if (history != null && history.Count > 0)
@@ -348,8 +348,6 @@ namespace Kopolart.Windows.UI.Forms
                     lstDownloads.Items.Add(lvi);
                 }
             }
-
-            lstDownloads.EndUpdate();
         }
 
         private string FormatTimestamp(DateTime dt)
@@ -427,7 +425,10 @@ namespace Kopolart.Windows.UI.Forms
                 {
                     Clipboard.SetText(last.Url);
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[DownloadsDialog] Failed to copy URL to clipboard: {ex.Message}");
+                }
             }
         }
 
@@ -621,7 +622,9 @@ namespace Kopolart.Windows.UI.Forms
 
             Color textColor = isSelected
                 ? SystemColors.HighlightText
-                : (IsDark ? Color.FromArgb(200, 200, 200) : Color.FromArgb(60, 60, 60));
+                : SystemAccessibility.IsHighContrast
+                    ? SystemColors.WindowText
+                    : (IsDark ? Color.FromArgb(200, 200, 200) : Color.FromArgb(60, 60, 60));
 
             var flags = TextFormatFlags.Left |
                         TextFormatFlags.VerticalCenter |
@@ -646,7 +649,9 @@ namespace Kopolart.Windows.UI.Forms
 
         private void HeroCard_Paint(object? sender, PaintEventArgs e)
         {
-            Color border = IsDark ? UIConstants.DarkMode.CardBorderDark : Color.FromArgb(225, 218, 210);
+            Color border = SystemAccessibility.IsHighContrast
+                ? SystemColors.ControlDark
+                : IsDark ? UIConstants.DarkMode.CardBorderDark : Color.FromArgb(225, 218, 210);
             using var p = new Pen(border, 1);
             e.Graphics.DrawRectangle(p, 0, 0, pnlHeroCard.Width - 1, pnlHeroCard.Height - 1);
         }

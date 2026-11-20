@@ -145,7 +145,10 @@ namespace Kopolart.Windows.Services
                 {
                     _parentForm.BeginInvoke(() => NotifyUpdateAvailable(updateInfo));
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[UpdateSchedulerService] BeginInvoke NotifyUpdateAvailable failed: {ex.Message}");
+                }
                 return;
             }
 
@@ -210,7 +213,10 @@ namespace Kopolart.Windows.Services
                 {
                     _parentForm.BeginInvoke(() => NotifyNewContentAvailable(posts));
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[UpdateSchedulerService] BeginInvoke NotifyNewContentAvailable failed: {ex.Message}");
+                }
                 return;
             }
 

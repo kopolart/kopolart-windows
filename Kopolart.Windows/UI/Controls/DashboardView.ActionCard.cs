@@ -105,7 +105,16 @@ namespace Kopolart.Windows.UI.Controls
                 Color subtitleColor;
                 Color iconColor;
 
-                if (IsHero)
+                bool highContrast = SystemAccessibility.IsHighContrast;
+                if (highContrast)
+                {
+                    cardBg = SystemColors.Window;
+                    cardBorder = SystemColors.ControlDark;
+                    titleColor = SystemColors.WindowText;
+                    subtitleColor = SystemColors.WindowText;
+                    iconColor = SystemColors.WindowText;
+                }
+                else if (IsHero)
                 {
                     cardBg = _isHovered
                         ? Color.FromArgb(158, 99, 40)
@@ -163,8 +172,8 @@ namespace Kopolart.Windows.UI.Controls
                     int badgeY = (Height - badgeHeight) / 2;
                     badgeRect = new Rectangle(badgeX, badgeY, badgeWidth, badgeHeight);
 
-                    Color effectiveBadgeColor = BadgeColor;
-                    if (_isDark && (effectiveBadgeColor == UIConstants.BrandSlateBlue || (effectiveBadgeColor.R == 83 && effectiveBadgeColor.G == 94 && effectiveBadgeColor.B == 123)))
+                    Color effectiveBadgeColor = highContrast ? SystemColors.Control : BadgeColor;
+                    if (_isDark && !highContrast && (effectiveBadgeColor == UIConstants.BrandSlateBlue || (effectiveBadgeColor.R == 83 && effectiveBadgeColor.G == 94 && effectiveBadgeColor.B == 123)))
                     {
                         effectiveBadgeColor = UIConstants.BrandSlateBlueDark;
                     }
@@ -173,9 +182,11 @@ namespace Kopolart.Windows.UI.Controls
                     using var badgeBgBrush = new SolidBrush(effectiveBadgeColor);
                     g.FillPath(badgeBgBrush, badgePath);
 
-                    Color badgeTextColor = BadgeTextColor ?? (effectiveBadgeColor.GetBrightness() > 0.55f
-                        ? UIConstants.TextThemeColor
-                        : Color.White);
+                    Color badgeTextColor = highContrast
+                        ? SystemColors.ControlText
+                        : BadgeTextColor ?? (effectiveBadgeColor.GetBrightness() > 0.55f
+                            ? UIConstants.TextThemeColor
+                            : Color.White);
 
                     using var badgeTextBrush = new SolidBrush(badgeTextColor);
                     var badgeFormat = new StringFormat

@@ -164,16 +164,6 @@ namespace Kopolart.Windows.UI.Helpers
         /// </summary>
         public static FontFamily FontFamily => RegularFontFamily ?? FontFamily.GenericSansSerif;
 
-        /// <summary>
-        /// Gets the extra-black display FontFamily (Abar or Estedad Black), or falls back to Bold/Regular.
-        /// </summary>
-        public static FontFamily? BlackFamily => BlackFontFamily ?? BoldFontFamily ?? RegularFontFamily;
-
-        /// <summary>
-        /// Gets the icon FontFamily for kopolart-fa, or null if not loaded.
-        /// </summary>
-        public static FontFamily? IconFamily => IconFontFamily;
-
         private static readonly System.Collections.Concurrent.ConcurrentDictionary<(string Family, float Size, FontStyle Style), Font> _fontCache = new();
 
         /// <summary>
@@ -270,18 +260,6 @@ namespace Kopolart.Windows.UI.Helpers
         {
             var family = BlackFontFamily ?? BoldFontFamily ?? RegularFontFamily;
             return new Font(family ?? FontFamily.GenericSansSerif, size, FontStyle.Regular, GraphicsUnit.Point);
-        }
-
-        /// <summary>
-        /// Creates an icon Font using the kopolart-fa icon family, or falls back to Segoe MDL2 Assets.
-        /// </summary>
-        public static Font CreateIconFont(float size)
-        {
-            if (IconFontFamily != null)
-            {
-                return new Font(IconFontFamily, size, FontStyle.Regular, GraphicsUnit.Point);
-            }
-            return new Font("Segoe MDL2 Assets", size, FontStyle.Regular, GraphicsUnit.Point);
         }
 
         /// <summary>

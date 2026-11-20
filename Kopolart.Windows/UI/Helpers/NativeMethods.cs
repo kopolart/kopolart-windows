@@ -5,7 +5,6 @@ namespace Kopolart.Windows.UI.Helpers
 {
     internal static class NativeMethods
     {
-        public const int SW_SHOWNORMAL = 1;
         public const int SW_SHOWMAXIMIZED = 3;
         public const int SW_SHOW = 5;
         public const int SW_RESTORE = 9;

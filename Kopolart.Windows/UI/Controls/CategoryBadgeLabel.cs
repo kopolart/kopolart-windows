@@ -82,6 +82,11 @@ namespace Kopolart.Windows.UI.Controls
 
         public static (Color bg, Color border, Color fg) GetCategoryColors(ContentCategory cat, bool isDark)
         {
+            if (SystemAccessibility.IsHighContrast)
+            {
+                return (SystemColors.Control, SystemColors.ControlDark, SystemColors.ControlText);
+            }
+
             if (isDark)
             {
                 return cat switch

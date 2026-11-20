@@ -1,3 +1,4 @@
+using Kopolart.Windows.UI.Helpers;
 using System.Drawing;
 
 namespace Kopolart.Windows.UI.Constants
@@ -6,13 +7,18 @@ namespace Kopolart.Windows.UI.Constants
     {
         public const string AppName = "Kopolart";
 
+        // When Windows high contrast is on, surface/text roles fall back to the system
+        // palette so the custom-painted controls stay readable. Brand and semantic colors
+        // (primary, danger, status) intentionally keep their branded values.
+        private static bool Hc => SystemAccessibility.IsHighContrast;
+
         // KopolArt Brand Backgrounds (matching mobile app BrandBackground #E2CDB4)
         public const string BrandBackgroundHex = "#e2cdb4";
-        public static readonly Color BrandBackground = ColorTranslator.FromHtml(BrandBackgroundHex);
+        public static Color BrandBackground => Hc ? SystemColors.Control : ColorTranslator.FromHtml(BrandBackgroundHex);
 
         public const string ThemeColorHex = "#e2cdb4";
         public static readonly Color ThemeColor = ColorTranslator.FromHtml(ThemeColorHex);
-        public static readonly Color TextThemeColor = Color.FromArgb(74, 59, 42);
+        public static Color TextThemeColor => Hc ? SystemColors.ControlText : Color.FromArgb(74, 59, 42);
 
         // Brand Primary Brown & Light/Dark variants (matching main.css & dark-mode.css)
         public const string BrandPrimaryHex = "#865231";
@@ -24,15 +30,15 @@ namespace Kopolart.Windows.UI.Constants
 
         // Navigation bar & window light background (matching mobile app BrandBackground #E2CDB4)
         public const string NavBarLightBgHex = "#e2cdb4";
-        public static readonly Color NavBarLightBg = ColorTranslator.FromHtml(NavBarLightBgHex);
+        public static Color NavBarLightBg => Hc ? SystemColors.Control : ColorTranslator.FromHtml(NavBarLightBgHex);
 
         // Card & Items Background and Border (matching mobile app CardBackgroundLight #FFFDF9 & CardBorderLight #E4D5C3)
         public const string CardBackgroundLightHex = "#FFFDF9";
-        public static readonly Color CardBackgroundLight = ColorTranslator.FromHtml(CardBackgroundLightHex);
+        public static Color CardBackgroundLight => Hc ? SystemColors.Window : ColorTranslator.FromHtml(CardBackgroundLightHex);
         public const string CardBorderLightHex = "#E4D5C3";
-        public static readonly Color CardBorderLight = ColorTranslator.FromHtml(CardBorderLightHex);
+        public static Color CardBorderLight => Hc ? SystemColors.ControlDark : ColorTranslator.FromHtml(CardBorderLightHex);
         public const string CardBackgroundHoverLightHex = "#FFFCFA";
-        public static readonly Color CardBackgroundHoverLight = ColorTranslator.FromHtml(CardBackgroundHoverLightHex);
+        public static Color CardBackgroundHoverLight => Hc ? SystemColors.Window : ColorTranslator.FromHtml(CardBackgroundHoverLightHex);
 
         // Project Order & Alerts / Danger
         public static readonly Color ProjectOrderColor = ColorTranslator.FromHtml("#c42525");
@@ -63,10 +69,10 @@ namespace Kopolart.Windows.UI.Constants
         // Light mode colors
         public static class LightMode
         {
-            public static readonly Color MenuHighlight = Color.FromArgb(218, 195, 168);
-            public static readonly Color MenuBorder = Color.FromArgb(228, 213, 195);
-            public static readonly Color MenuButtonPressed = Color.FromArgb(210, 185, 155);
-            public static readonly Color TextDisabledColor = Color.Gray;
+            public static Color MenuHighlight => Hc ? SystemColors.Highlight : Color.FromArgb(218, 195, 168);
+            public static Color MenuBorder => Hc ? SystemColors.ControlDark : Color.FromArgb(228, 213, 195);
+            public static Color MenuButtonPressed => Hc ? SystemColors.Highlight : Color.FromArgb(210, 185, 155);
+            public static Color TextDisabledColor => Hc ? SystemColors.GrayText : Color.Gray;
         }
 
         // Loader Colors
@@ -84,15 +90,6 @@ namespace Kopolart.Windows.UI.Constants
         public static readonly Color DotColor2 = ColorTranslator.FromHtml("#b07d4f");
         public static readonly Color DotColor3 = ColorTranslator.FromHtml("#d4a574");
 
-        // Offline page colors (derived from theme)
-        public const string OfflinePageBgHex = "#e2cdb4";
-        public const string OfflinePageTextHex = "#555";
-        public const string OfflinePageHeadingHex = "#333";
-        public const string OfflinePageSubtextHex = "#777";
-        public const string OfflinePageButtonTextHex = "#4a3b2a";
-        public static string OfflinePageShadowRgba(double alpha) =>
-            $"rgba({ThemeColor.R}, {ThemeColor.G}, {ThemeColor.B}, {alpha})";
-
         // Dark mode
         public static class DarkMode
         {
@@ -101,30 +98,30 @@ namespace Kopolart.Windows.UI.Constants
 
             // KopolArt Brand Dark Background (matching mobile app BrandBackgroundDark #403E3B)
             public const string BrandBackgroundDarkHex = "#403E3B";
-            public static readonly Color BrandBackground = ColorTranslator.FromHtml(BrandBackgroundDarkHex);
+            public static Color BrandBackground => Hc ? SystemColors.Control : ColorTranslator.FromHtml(BrandBackgroundDarkHex);
 
             public const string ThemeColorHex = "#a3795f";
             public static readonly Color ThemeColor = ColorTranslator.FromHtml(ThemeColorHex);
 
             // Navigation overlay: dark background
-            public static readonly Color OverlayBackColor = ColorTranslator.FromHtml("#312f2d");
+            public static Color OverlayBackColor => Hc ? SystemColors.Control : ColorTranslator.FromHtml("#312f2d");
 
             // Menu strip & App window dark background (matching mobile app BrandBackgroundDark #403E3B)
             public const string MenuStripBackColorHex = "#403E3B";
-            public static readonly Color MenuStripBackColor = ColorTranslator.FromHtml(MenuStripBackColorHex);
-            public static readonly Color MenuStripForeColor = ColorTranslator.FromHtml("#e0e0e0");
-            public static readonly Color MenuHighlight = Color.FromArgb(77, 74, 71);
-            public static readonly Color MenuBorder = Color.FromArgb(77, 74, 71);
-            public static readonly Color MenuButtonPressed = Color.FromArgb(52, 50, 48);
-            public static readonly Color TextDisabledColor = Color.FromArgb(120, 120, 120);
+            public static Color MenuStripBackColor => Hc ? SystemColors.Control : ColorTranslator.FromHtml(MenuStripBackColorHex);
+            public static Color MenuStripForeColor => Hc ? SystemColors.ControlText : ColorTranslator.FromHtml("#e0e0e0");
+            public static Color MenuHighlight => Hc ? SystemColors.Highlight : Color.FromArgb(77, 74, 71);
+            public static Color MenuBorder => Hc ? SystemColors.ControlDark : Color.FromArgb(77, 74, 71);
+            public static Color MenuButtonPressed => Hc ? SystemColors.Highlight : Color.FromArgb(52, 50, 48);
+            public static Color TextDisabledColor => Hc ? SystemColors.GrayText : Color.FromArgb(120, 120, 120);
 
             // Card & Items Background and Border (matching mobile app CardBackgroundDark #2C2A28 & CardBorderDark #4D4A47)
             public const string CardBackgroundDarkHex = "#2C2A28";
-            public static readonly Color CardBackgroundDark = ColorTranslator.FromHtml(CardBackgroundDarkHex);
+            public static Color CardBackgroundDark => Hc ? SystemColors.Window : ColorTranslator.FromHtml(CardBackgroundDarkHex);
             public const string CardBorderDarkHex = "#4D4A47";
-            public static readonly Color CardBorderDark = ColorTranslator.FromHtml(CardBorderDarkHex);
+            public static Color CardBorderDark => Hc ? SystemColors.ControlDark : ColorTranslator.FromHtml(CardBorderDarkHex);
             public const string CardBackgroundHoverDarkHex = "#3A3835";
-            public static readonly Color CardBackgroundHoverDark = ColorTranslator.FromHtml(CardBackgroundHoverDarkHex);
+            public static Color CardBackgroundHoverDark => Hc ? SystemColors.Window : ColorTranslator.FromHtml(CardBackgroundHoverDarkHex);
 
             // Dark mode brand colors
             public static readonly Color BrandPrimary = BrandPrimaryDark;

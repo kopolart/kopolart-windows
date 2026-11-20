@@ -118,7 +118,7 @@ namespace Kopolart.Windows.Infrastructure.Services
 
                 if (!process.WaitForExit(MaxCommandWaitMs))
                 {
-                    try { process.Kill(entireProcessTree: true); } catch { }
+                    try { process.Kill(entireProcessTree: true); } catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[WindowsBackgroundPostCheckService] Failed to kill timed-out process tree: {ex.Message}"); }
                     return -1;
                 }
 

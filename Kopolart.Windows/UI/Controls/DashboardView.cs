@@ -856,7 +856,10 @@ namespace Kopolart.Windows.UI.Controls
             {
                 RefreshRecentSearches();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DashboardView] Failed to refresh recent searches: {ex.Message}");
+            }
 
             try
             {

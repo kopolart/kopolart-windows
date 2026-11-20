@@ -41,9 +41,6 @@ namespace Kopolart.Windows.Domain.Constants
 
         public static class Files
         {
-            public const string LogoFileName = "kopolart_logo.png";
-            public const string LogoDarkFileName = "kopolart_logo_dark.png";
-            public const string IconFileName = "kopolart_icon.ico";
             public const string WebViewRuntimeExe = "msedgewebview2.exe";
         }
 

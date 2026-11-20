@@ -166,6 +166,8 @@ namespace Kopolart.Windows.UI.Forms
                 () => _navBar,
                 () => _dashboardView);
 
+            SystemAccessibility.Changed += OnSystemAccessibilityChanged;
+
             _backupCoordinator = new DataBackupCoordinator(
                 this,
                 _backupService,
@@ -595,6 +597,11 @@ namespace Kopolart.Windows.UI.Forms
         public void UpdateThemeState(bool isDark) => _themeCoordinator.UpdateThemeState(isDark);
         public void ApplyDarkModeToUI(bool isDark) => _themeCoordinator.ApplyDarkModeToUI(isDark);
 
+        private void OnSystemAccessibilityChanged(object? sender, SystemVisualSettingsChangedEventArgs e)
+        {
+            _themeCoordinator.ApplyDarkModeToUI(_themeCoordinator.IsDarkMode);
+        }
+
         public void ApplyTexts()
         {
             RightToLeft = RightToLeft.Yes;
@@ -836,6 +843,7 @@ namespace Kopolart.Windows.UI.Forms
         {
             if (disposing)
             {
+                SystemAccessibility.Changed -= OnSystemAccessibilityChanged;
                 _networkWatcher?.Dispose();
 
                 if (components != null)

@@ -121,6 +121,13 @@ namespace Kopolart.Windows.UI.Controls
                 Color cardBg = _isDark ? UIConstants.DarkMode.CardBackgroundDark : UIConstants.CardBackgroundLight;
                 Color cardBorder = _isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight;
 
+                bool highContrast = SystemAccessibility.IsHighContrast;
+                if (highContrast)
+                {
+                    cardBg = SystemColors.Window;
+                    cardBorder = SystemColors.ControlDark;
+                }
+
                 using (var bgBrush = new SolidBrush(cardBg))
                 {
                     g.FillPath(bgBrush, path);
@@ -134,7 +141,7 @@ namespace Kopolart.Windows.UI.Controls
                 int fourthWidth = Width / 4;
 
                 // 3 Dividers
-                Color dividerColor = _isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight;
+                Color dividerColor = highContrast ? SystemColors.ControlDark : _isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight;
                 using (var dividerPen = new Pen(dividerColor, 1F))
                 {
                     g.DrawLine(dividerPen, fourthWidth, 14, fourthWidth, Height - 14);
@@ -157,13 +164,13 @@ namespace Kopolart.Windows.UI.Controls
                 var onlineRect = col1Rect;
                 var dataRect = col0Rect;
 
-                Color mutedColor = _isDark ? Color.FromArgb(189, 181, 170) : Color.FromArgb(105, 95, 88);
-                Color primaryColor = _isDark ? Color.FromArgb(242, 169, 59) : UIConstants.BrandPrimary;
-                Color pagesColor = _isDark ? Color.FromArgb(255, 179, 71) : Color.FromArgb(180, 90, 40);
-                Color secondaryColor = _isDark ? UIConstants.BrandSlateBlueDark : UIConstants.BrandSlateBlue;
+                Color mutedColor = highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(189, 181, 170) : Color.FromArgb(105, 95, 88);
+                Color primaryColor = highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(242, 169, 59) : UIConstants.BrandPrimary;
+                Color pagesColor = highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(255, 179, 71) : Color.FromArgb(180, 90, 40);
+                Color secondaryColor = highContrast ? SystemColors.WindowText : _isDark ? UIConstants.BrandSlateBlueDark : UIConstants.BrandSlateBlue;
 
-                Color liveGreen = _isDark ? UIConstants.LiveGreenDark : UIConstants.LiveGreenLight;
-                Color fadedGreen = _isDark ? UIConstants.LiveGreenFadedDark : UIConstants.LiveGreenFadedLight;
+                Color liveGreen = highContrast ? SystemColors.Highlight : _isDark ? UIConstants.LiveGreenDark : UIConstants.LiveGreenLight;
+                Color fadedGreen = highContrast ? SystemColors.Highlight : _isDark ? UIConstants.LiveGreenFadedDark : UIConstants.LiveGreenFadedLight;
                 Color onlineColor = IsOnlineLive
                     ? (_isBlinkFaded ? fadedGreen : liveGreen)
                     : mutedColor;

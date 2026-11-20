@@ -42,7 +42,7 @@ namespace Kopolart.Windows.UI.Helpers
                 var remainingMs = MinInitialLoadingMs - elapsed.TotalMilliseconds;
                 if (remainingMs > 0)
                 {
-                    try { await Task.Delay((int)remainingMs); } catch { }
+                    try { await Task.Delay((int)remainingMs); } catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[LoadingStateManager] Minimum loading delay interrupted: {ex.Message}"); }
                 }
             }
             else if (LoadingStartTime.HasValue)
@@ -54,7 +54,7 @@ namespace Kopolart.Windows.UI.Helpers
                 var remainingMs = MinNavLoadingMs - elapsed.TotalMilliseconds;
                 if (remainingMs > 0)
                 {
-                    try { await Task.Delay((int)remainingMs); } catch { }
+                    try { await Task.Delay((int)remainingMs); } catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[LoadingStateManager] Minimum navigation delay interrupted: {ex.Message}"); }
                 }
             }
         }

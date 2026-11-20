@@ -383,11 +383,11 @@ namespace Kopolart.Windows.UI.Helpers
         {
             if (windowState == FormWindowState.Minimized && _webViewController.WebView?.CoreWebView2 != null)
             {
-                try { await _webViewController.WebView.CoreWebView2.TrySuspendAsync(); } catch { }
+                try { await _webViewController.WebView.CoreWebView2.TrySuspendAsync(); } catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[WebViewLifecycleCoordinator] TrySuspendAsync failed: {ex.Message}"); }
             }
             else if (windowState != FormWindowState.Minimized && _webViewController.WebView?.CoreWebView2 != null)
             {
-                try { _webViewController.WebView.CoreWebView2.Resume(); } catch { }
+                try { _webViewController.WebView.CoreWebView2.Resume(); } catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[WebViewLifecycleCoordinator] WebView Resume failed: {ex.Message}"); }
             }
         }
     }

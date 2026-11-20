@@ -24,7 +24,13 @@ namespace Kopolart.Windows.UI.Helpers
 
         protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
         {
-            if (e.Item.Name == "projectOrderToolStripMenuItem")
+            if (SystemAccessibility.IsHighContrast)
+            {
+                e.TextColor = !e.Item.Enabled
+                    ? SystemColors.GrayText
+                    : e.Item.Selected ? SystemColors.HighlightText : SystemColors.ControlText;
+            }
+            else if (e.Item.Name == "projectOrderToolStripMenuItem")
             {
                 e.TextColor = e.Item.ForeColor;
             }
@@ -77,17 +83,32 @@ namespace Kopolart.Windows.UI.Helpers
             int top = bounds.Y + 4;
             int bottom = bounds.Bottom - 4;
 
-            using var pen = new Pen(UIConstants.DarkMode.MenuBorder);
+            using var pen = new Pen(SystemAccessibility.IsHighContrast ? SystemColors.ControlDark : UIConstants.DarkMode.MenuBorder);
             e.Graphics.DrawLine(pen, x, top, x, bottom);
         }
     }
 
     public class DarkColorTable : ProfessionalColorTable
     {
-        private static readonly Color DarkBg = UIConstants.DarkMode.MenuStripBackColor;
-        private static readonly Color Highlight = UIConstants.DarkMode.MenuHighlight;
-        private static readonly Color Border = UIConstants.DarkMode.MenuBorder;
-        private static readonly Color ButtonPressed = UIConstants.DarkMode.MenuButtonPressed;
+        private static Color DarkBg => SystemAccessibility.IsHighContrast
+            ? SystemColors.Control
+            : UIConstants.DarkMode.MenuStripBackColor;
+
+        private static Color Highlight => SystemAccessibility.IsHighContrast
+            ? SystemColors.Highlight
+            : UIConstants.DarkMode.MenuHighlight;
+
+        private static Color Border => SystemAccessibility.IsHighContrast
+            ? SystemColors.ControlDark
+            : UIConstants.DarkMode.MenuBorder;
+
+        private static Color ButtonPressed => SystemAccessibility.IsHighContrast
+            ? SystemColors.Highlight
+            : UIConstants.DarkMode.MenuButtonPressed;
+
+        private static Color DropDownBackground => SystemAccessibility.IsHighContrast
+            ? SystemColors.Window
+            : UIConstants.DarkMode.CardBackgroundDark;
 
         public override Color MenuItemSelected => Highlight;
         public override Color MenuItemSelectedGradientBegin => Highlight;
@@ -96,12 +117,12 @@ namespace Kopolart.Windows.UI.Helpers
         public override Color MenuItemPressedGradientEnd => DarkBg;
         public override Color MenuBorder => Border;
         public override Color MenuItemBorder => Border;
-        public override Color ToolStripDropDownBackground => UIConstants.DarkMode.CardBackgroundDark;
-        public override Color ImageMarginGradientBegin => UIConstants.DarkMode.CardBackgroundDark;
-        public override Color ImageMarginGradientMiddle => UIConstants.DarkMode.CardBackgroundDark;
-        public override Color ImageMarginGradientEnd => UIConstants.DarkMode.CardBackgroundDark;
+        public override Color ToolStripDropDownBackground => DropDownBackground;
+        public override Color ImageMarginGradientBegin => DropDownBackground;
+        public override Color ImageMarginGradientMiddle => DropDownBackground;
+        public override Color ImageMarginGradientEnd => DropDownBackground;
         public override Color SeparatorDark => Border;
-        public override Color SeparatorLight => UIConstants.DarkMode.CardBackgroundDark;
+        public override Color SeparatorLight => DropDownBackground;
 
         // Navigation buttons hover states
         public override Color ButtonSelectedGradientBegin => Highlight;
@@ -126,7 +147,13 @@ namespace Kopolart.Windows.UI.Helpers
 
         protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
         {
-            if (e.Item.Name == "projectOrderToolStripMenuItem" || (e.Item.ForeColor != Color.Empty && e.Item.ForeColor != SystemColors.ControlText))
+            if (SystemAccessibility.IsHighContrast)
+            {
+                e.TextColor = !e.Item.Enabled
+                    ? SystemColors.GrayText
+                    : e.Item.Selected ? SystemColors.HighlightText : SystemColors.ControlText;
+            }
+            else if (e.Item.Name == "projectOrderToolStripMenuItem" || (e.Item.ForeColor != Color.Empty && e.Item.ForeColor != SystemColors.ControlText))
             {
                 e.TextColor = e.Item.ForeColor;
             }
@@ -179,17 +206,32 @@ namespace Kopolart.Windows.UI.Helpers
             int top = bounds.Y + 4;
             int bottom = bounds.Bottom - 4;
 
-            using var pen = new Pen(UIConstants.LightMode.MenuBorder);
+            using var pen = new Pen(SystemAccessibility.IsHighContrast ? SystemColors.ControlDark : UIConstants.LightMode.MenuBorder);
             e.Graphics.DrawLine(pen, x, top, x, bottom);
         }
     }
 
     public class LightColorTable : ProfessionalColorTable
     {
-        private static readonly Color Highlight = UIConstants.LightMode.MenuHighlight;
-        private static readonly Color LightBg = UIConstants.NavBarLightBg;
-        private static readonly Color Border = UIConstants.LightMode.MenuBorder;
-        private static readonly Color ButtonPressed = UIConstants.LightMode.MenuButtonPressed;
+        private static Color Highlight => SystemAccessibility.IsHighContrast
+            ? SystemColors.Highlight
+            : UIConstants.LightMode.MenuHighlight;
+
+        private static Color LightBg => SystemAccessibility.IsHighContrast
+            ? SystemColors.Control
+            : UIConstants.NavBarLightBg;
+
+        private static Color Border => SystemAccessibility.IsHighContrast
+            ? SystemColors.ControlDark
+            : UIConstants.LightMode.MenuBorder;
+
+        private static Color ButtonPressed => SystemAccessibility.IsHighContrast
+            ? SystemColors.Highlight
+            : UIConstants.LightMode.MenuButtonPressed;
+
+        private static Color DropDownBackground => SystemAccessibility.IsHighContrast
+            ? SystemColors.Window
+            : UIConstants.CardBackgroundLight;
 
         public override Color MenuItemSelected => Highlight;
         public override Color MenuItemSelectedGradientBegin => Highlight;
@@ -198,12 +240,12 @@ namespace Kopolart.Windows.UI.Helpers
         public override Color MenuItemPressedGradientEnd => LightBg;
         public override Color MenuBorder => Border;
         public override Color MenuItemBorder => Border;
-        public override Color ToolStripDropDownBackground => UIConstants.CardBackgroundLight;
-        public override Color ImageMarginGradientBegin => UIConstants.CardBackgroundLight;
-        public override Color ImageMarginGradientMiddle => UIConstants.CardBackgroundLight;
-        public override Color ImageMarginGradientEnd => UIConstants.CardBackgroundLight;
+        public override Color ToolStripDropDownBackground => DropDownBackground;
+        public override Color ImageMarginGradientBegin => DropDownBackground;
+        public override Color ImageMarginGradientMiddle => DropDownBackground;
+        public override Color ImageMarginGradientEnd => DropDownBackground;
         public override Color SeparatorDark => Border;
-        public override Color SeparatorLight => UIConstants.CardBackgroundLight;
+        public override Color SeparatorLight => DropDownBackground;
 
         // Navigation buttons hover states using Cream color
         public override Color ButtonSelectedGradientBegin => Highlight;

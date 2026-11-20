@@ -117,6 +117,10 @@ namespace Kopolart.Windows
             System.Windows.Forms.Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             System.Windows.Forms.Application.EnableVisualStyles();
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+
+            // Cache the current accessibility/visual settings and start listening for changes
+            // (text scale, high contrast, accent color, keyboard cues).
+            SystemAccessibility.Initialize();
         }
 
         private static void RegisterGlobalExceptionHandlers()

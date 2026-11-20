@@ -118,13 +118,19 @@ namespace Kopolart.Windows.UI.Controls
                 var chipRect = new RectangleF(0.5f, 0.5f, w - 1f, h - 1f);
                 using var path = CreateRoundedRectangle(chipRect, 10f);
 
-                Color chipBg = _isDark
-                    ? (_isHovered ? UIConstants.DarkMode.CardBackgroundHoverDark : UIConstants.DarkMode.CardBackgroundDark)
-                    : (_isHovered ? UIConstants.CardBackgroundHoverLight : UIConstants.CardBackgroundLight);
+                bool highContrast = SystemAccessibility.IsHighContrast;
 
-                Color chipBorder = _isHovered
-                    ? (_isDark ? UIConstants.DarkMode.BrandPrimary : UIConstants.BrandPrimary)
-                    : (_isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight);
+                Color chipBg = highContrast
+                    ? SystemColors.Window
+                    : _isDark
+                        ? (_isHovered ? UIConstants.DarkMode.CardBackgroundHoverDark : UIConstants.DarkMode.CardBackgroundDark)
+                        : (_isHovered ? UIConstants.CardBackgroundHoverLight : UIConstants.CardBackgroundLight);
+
+                Color chipBorder = highContrast
+                    ? SystemColors.ControlDark
+                    : _isHovered
+                        ? (_isDark ? UIConstants.DarkMode.BrandPrimary : UIConstants.BrandPrimary)
+                        : (_isDark ? UIConstants.DarkMode.CardBorderDark : UIConstants.CardBorderLight);
 
                 using (var bgBrush = new SolidBrush(chipBg))
                 {
@@ -137,7 +143,7 @@ namespace Kopolart.Windows.UI.Controls
                 }
 
                 var textFont = FontManager.GetFont(9.5f, FontStyle.Regular);
-                Color textCol = _isDark ? Color.FromArgb(249, 246, 240) : Color.FromArgb(32, 28, 24);
+                Color textCol = highContrast ? SystemColors.WindowText : _isDark ? Color.FromArgb(249, 246, 240) : Color.FromArgb(32, 28, 24);
                 int textX = _deleteRect.Right + 4;
                 int textW = Math.Max(10, w - textX - 8);
                 var textRect = new Rectangle(textX, 0, textW, h);
@@ -156,9 +162,11 @@ namespace Kopolart.Windows.UI.Controls
                     g.FillEllipse(delBgBrush, _deleteRect);
                 }
 
-                Color delIconCol = _isDeleteHovered
-                    ? Color.FromArgb(230, 80, 80)
-                    : (_isDark ? Color.FromArgb(189, 181, 170) : Color.FromArgb(105, 95, 88));
+                Color delIconCol = highContrast
+                    ? SystemColors.WindowText
+                    : _isDeleteHovered
+                        ? Color.FromArgb(230, 80, 80)
+                        : (_isDark ? Color.FromArgb(189, 181, 170) : Color.FromArgb(105, 95, 88));
 
                 var delIconFont = FontManager.GetIconFont(8.5f);
                 using var delBrush = new SolidBrush(delIconCol);

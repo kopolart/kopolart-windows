@@ -200,8 +200,22 @@ namespace Kopolart.Windows.UI.Controls
             _isDarkMode = isDark;
             _dotsRenderer.SetDarkMode(isDark);
             UpdateThemeLogo();
-            
-            if (isDark)
+
+            if (SystemAccessibility.IsHighContrast)
+            {
+                BackColor = SystemColors.Control;
+                loaderLabel.ForeColor = SystemColors.ControlText;
+                firstRunWelcomeLabel.ForeColor = SystemColors.ControlText;
+                firstRunWelcomeBackLabel.ForeColor = SystemColors.ControlText;
+                loaderWarningLabel.ForeColor = SystemColors.ControlText;
+                loaderButton.BackColor = SystemColors.Control;
+                loaderButton.ForeColor = SystemColors.ControlText;
+                if (versionLabel != null)
+                {
+                    versionLabel.ForeColor = SystemColors.GrayText;
+                }
+            }
+            else if (isDark)
             {
                 BackColor = UIConstants.DarkMode.BrandBackground;
                 loaderLabel.ForeColor = ColorTranslator.FromHtml("#e8e0d8");
@@ -223,7 +237,7 @@ namespace Kopolart.Windows.UI.Controls
                     versionLabel.ForeColor = Color.FromArgb(140, 110, 80);
                 }
             }
-            
+
             dotsPanel.Invalidate();
         }
 

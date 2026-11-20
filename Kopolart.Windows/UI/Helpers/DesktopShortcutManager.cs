@@ -129,33 +129,6 @@ namespace Kopolart.Windows.UI.Helpers
         }
 
         /// <summary>
-        /// Forces creation of the desktop shortcut regardless of whether it was created previously.
-        /// </summary>
-        public static void CreateDesktopShortcut(ISettingsManager settingsManager)
-        {
-            try
-            {
-                if (TryCreateDesktopShortcut())
-                {
-                    try
-                    {
-                        settingsManager.SetDesktopShortcutCreated(true);
-                        settingsManager.Flush();
-                        Debug.WriteLine("Desktop shortcut created and recorded successfully.");
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"Failed to persist desktop shortcut creation state: {ex}");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Desktop shortcut creation failed: {ex}");
-            }
-        }
-
-        /// <summary>
         /// Checks whether a valid shortcut for Kopolart already exists on the desktop.
         /// </summary>
         public static bool ShortcutExists()

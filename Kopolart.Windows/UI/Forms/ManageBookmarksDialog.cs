@@ -228,7 +228,7 @@ namespace Kopolart.Windows.UI.Forms
 
         private void FilterBookmarks()
         {
-            lstBookmarks.BeginUpdate();
+            using var paintScope = lstBookmarks.SuspendPainting();
 
             string? selectedUrl = (lstBookmarks.SelectedItem is BookmarkItem selected) ? selected.Url : null;
 
@@ -273,7 +273,6 @@ namespace Kopolart.Windows.UI.Forms
                 }
             }
 
-            lstBookmarks.EndUpdate();
             UpdateUiState();
         }
 
@@ -285,6 +284,7 @@ namespace Kopolart.Windows.UI.Forms
             if (lstBookmarks.Items[e.Index] is not BookmarkItem item)
                 return;
 
+            bool highContrast = SystemAccessibility.IsHighContrast;
             bool isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
 
             // Background color
@@ -292,13 +292,13 @@ namespace Kopolart.Windows.UI.Forms
             Color textColor;
             if (isSelected)
             {
-                backColor = IsDark ? Color.FromArgb(70, 70, 75) : Color.FromArgb(220, 235, 252);
-                textColor = IsDark ? Color.White : Color.Black;
+                backColor = highContrast ? SystemColors.Highlight : IsDark ? Color.FromArgb(70, 70, 75) : Color.FromArgb(220, 235, 252);
+                textColor = highContrast ? SystemColors.HighlightText : IsDark ? Color.White : Color.Black;
             }
             else
             {
-                backColor = IsDark ? UIConstants.DarkMode.CardBackgroundDark : Color.White;
-                textColor = IsDark ? UIConstants.DarkMode.MenuStripForeColor : Color.FromArgb(30, 30, 30);
+                backColor = highContrast ? SystemColors.Window : IsDark ? UIConstants.DarkMode.CardBackgroundDark : Color.White;
+                textColor = highContrast ? SystemColors.WindowText : IsDark ? UIConstants.DarkMode.MenuStripForeColor : Color.FromArgb(30, 30, 30);
             }
 
             // Card bounds with luxury gold border
@@ -306,7 +306,7 @@ namespace Kopolart.Windows.UI.Forms
 
             using (var cardPath = CreateRoundedRectanglePath(cardRect, 4))
             using (var backBrush = new SolidBrush(backColor))
-            using (var goldPen = new Pen(UIConstants.BrandGold, isSelected ? 2f : 1.2f))
+            using (var goldPen = new Pen(highContrast ? SystemColors.ControlDark : UIConstants.BrandGold, isSelected ? 2f : 1.2f))
             {
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
                 e.Graphics.FillPath(backBrush, cardPath);

@@ -198,17 +198,6 @@ namespace Kopolart.Windows.Application.Services
         }
 
         /// <summary>
-        /// Gets the exact usage in milliseconds for today up to the current second.
-        /// </summary>
-        public long GetTodayUsageMilliseconds(DateTime? currentTime = null)
-        {
-            var now = currentTime ?? DateTime.Now;
-            var todayKey = now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-            var live = GetLiveDailyUsage(now);
-            return live.GetValueOrDefault(todayKey, 0L);
-        }
-
-        /// <summary>
         /// Records consumed internet data bytes.
         /// </summary>
         public void TrackInternetBytes(long bytes)
