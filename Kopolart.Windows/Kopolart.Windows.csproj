@@ -32,7 +32,7 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="11.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="11.0.0" />
 		<PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4370.26" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64' and '$(BundleWebView2Runtime)' == 'true'">

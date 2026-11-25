@@ -1,4 +1,4 @@
-﻿using Kopolart.Windows.Application.Interfaces;
+using Kopolart.Windows.Application.Interfaces;
 using Kopolart.Windows.Domain.Constants;
 using Kopolart.Windows.Domain.Models;
 using Kopolart.Windows.UI.Constants;
@@ -411,18 +411,44 @@ namespace Kopolart.Windows.UI.Controls
             var rect = new RectangleF(_searchBtnRect.X, _searchBtnRect.Y, _searchBtnRect.Width, _searchBtnRect.Height);
             using var path = CreateRoundedRectanglePath(rect, 8f);
 
-            Color bg = _isSearchBtnHovered
-                ? Color.FromArgb(235, accentColor)
-                : accentColor;
+            // High contrast keeps the guaranteed system Highlight / HighlightText pair.
+            if (SystemAccessibility.IsHighContrast)
+            {
+                using var hcBrush = new SolidBrush(accentColor);
+                g.FillPath(hcBrush, path);
+                DrawSearchGlyph(g, rect, SystemColors.HighlightText);
+                return;
+            }
 
-            using (var brush = new SolidBrush(bg))
+            // The primary search action uses the brand brown pair (same fill and hover tone
+            // as the hero card) instead of the category accent. A fully saturated accent tile
+            // glares in both themes - the amber "Colors" accent (#FBBF24) was the worst case,
+            // a bright yellow block with a white glyph that was barely readable - and the brand
+            // tone stays calm and predictable whatever category is selected.
+            Color fill = _isSearchBtnHovered
+                ? Color.FromArgb(158, 99, 40)
+                : UIConstants.BrandPrimary;
+
+            using (var brush = new SolidBrush(fill))
             {
                 g.FillPath(brush, path);
             }
 
-            // Search Icon (Contrast White)
+            // In dark mode the brown sits close to the dark card, so a hairline edge keeps the
+            // button silhouette readable against it.
+            if (_isDark)
+            {
+                using var edgePen = new Pen(Color.FromArgb(60, 255, 255, 255), 1f);
+                g.DrawPath(edgePen, path);
+            }
+
+            DrawSearchGlyph(g, rect, Color.White);
+        }
+
+        private void DrawSearchGlyph(Graphics g, RectangleF rect, Color color)
+        {
             var iconFont = FontManager.GetIconFont(12f);
-            using var iconBrush = new SolidBrush(Color.White);
+            using var iconBrush = new SolidBrush(color);
 
             var size = g.MeasureString(KopolArtFaIcons.Search, iconFont);
             float x = rect.X + (rect.Width - size.Width) / 2f;
